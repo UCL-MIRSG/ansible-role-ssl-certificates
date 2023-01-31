@@ -4,4 +4,4 @@
   tasks:
     - name: "Include mirsg.ssl_certificates"
       ansible.builtin.include_role:
-        name: "mirsg.postgresql"
+        name: "mirsg.ssl_certificates"

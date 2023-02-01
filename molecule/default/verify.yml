@@ -1,10 +1,17 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - name: Verify
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
-    - name: Example assertion
+    - name: "Retrieve information about file in Ansible cache"
+      ansible.builtin.stat:
+        path: "{{ ansible_cache_dir }}/pg_certificates/db.postgresql_server.crt"
+      register: cached_certificate
+    - name: Check certificate is stored in cache
       ansible.builtin.assert:
-        that: true
+        that:
+          - "cached_certificate.exists"
+          - "cached_certificate.isfile"
+          - "cached_certificate.mode == 0400"
+          - "cached_certificate.pw_name == postgres"
+          - "cached_certificate.gr_name == postgres"

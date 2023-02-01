@@ -1,7 +1,9 @@
 ---
 - name: Converge
-  hosts: all
+  hosts: db
+  become: true
+  gather_facts: true
   tasks:
-    - name: "Include mirsg.ssl_certificates"
+    - name: Create self-signed SSL certificates
       ansible.builtin.include_role:
         name: "mirsg.ssl_certificates"

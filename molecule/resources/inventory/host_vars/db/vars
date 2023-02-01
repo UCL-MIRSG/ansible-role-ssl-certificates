@@ -1,0 +1,13 @@
+---
+self_signed_certifcate:
+  owner: "postgres"
+  group: "postgres"
+  certificate_directory: "/var/lib/pgsql/certs"
+  privatekey_filename: "{{ self_signed_certifcate.certificate_directory }}/server.key"
+  use_pk8: false
+  pk8_filename: ""
+  csr_filename: "{{ self_signed_certifcate.certificate_directory }}/server.csr"
+  csr_common_name: "{{ db_host }}"
+  certificate_filename: "{{ self_signed_certifcate.certificate_directory }}/server.crt"
+  provider: "selfsigned"
+  cache_filename: ""

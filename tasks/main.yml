@@ -1,5 +1,9 @@
 ---
 # tasks file for ansible-role-ssl-certificates
+- name: Print self_signed_certificate variable
+  ansible.builtin.debug:
+    var: "{{ self_signed_certificate }}"
+
 - name: Ensure certificate directory exists with the correct permissions
   ansible.builtin.file:
     path: "{{ self_signed_certifcate.certificate_directory }}"

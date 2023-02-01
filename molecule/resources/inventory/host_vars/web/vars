@@ -1,13 +1,15 @@
 ---
+# Variables for creating a SSL certificate for a postgresql client
 self_signed_certificate:
-  owner: "tomcat"
-  group: "tomcat"
+  owner: "root"
+  group: "root"
   certificate_directory: "/usr/share/tomcat/.postgresql"
-  privatekey_filename: "{{ self_signed_certifcate.certificate_directory }}/postgresql.key"
+  privatekey_filename: "/usr/share/tomcat/.postgresql/postgresql.key"
   use_pk8: true
-  pk8_filename: "{{ self_signed_certifcate.certificate_directory }}/postgresql.pk8"
-  csr_filename: "{{ self_signed_certifcate.certificate_directory }}/postgresql.csr"
-  csr_common_name: "{{ web_host }}"
-  certificate_filename: "{{ self_signed_certifcate.certificate_directory }}/postgresql.crt"
+  pk8_filename: "/usr/share/tomcat/.postgresql/postgresql.pk8"
+  csr_filename: "/usr/share/tomcat/.postgresql/postgresql.csr"
+  csr_common_name: "{{ web_hostname }}"
+  certificate_filename: "/usr/share/tomcat/.postgresql/postgresql.crt"
   provider: "selfsigned"
-  cache_filename: "{{ postgres_client_certificate_cache_filename }}"
+  cache_filename: "{{ postgres_client_certificate_cache_filename }}" # where to store the client certificate in cache
+  server_certificate_filename: "/usr/share/tomcat/.postgresql/root.crt" # where to copy the server certificate to on the client

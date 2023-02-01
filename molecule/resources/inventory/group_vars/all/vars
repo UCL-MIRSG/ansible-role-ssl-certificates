@@ -1,9 +1,7 @@
 ---
-db_host: "{{ hostvars['db']['ansible_host'] }}"
-web_host: "{{ hostvars['web']['ansible_host'] }}"
+ansible_cache_dir: "{{ lookup('env', 'HOME') }}/ansible_persistent_files"
+db_hostname: "db"
+web_hostname: "web"
 
-postgres_server_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_host }}.postgresql_server.crt"
-postgres_client_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ web_host }}.postgresql_client.crt"
-
-client_certificate_filename:  "{{ self_signed_certifcate.certificate_directory }}/root.crt"  # place to copy client cert to on server
-server_certificate_filename: "{{ self_signed_certifcate.certificate_directory }}/root.crt"  # place to copy server cert to on client
+postgres_server_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_hostname }}.postgresql_server.crt"
+postgres_client_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ web_hostname }}.postgresql_client.crt"

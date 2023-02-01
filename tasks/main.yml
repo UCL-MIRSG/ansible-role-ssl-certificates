@@ -2,54 +2,60 @@
 # tasks file for ansible-role-ssl-certificates
 - name: Print self_signed_certificate variable
   ansible.builtin.debug:
-    var: "{{ self_signed_certificate }}"
+    var: self_signed_certificate
+
+- name: Print postgres_server_certificate_cache_filename
+  ansible.builtin.debug:
+    var: postgres_server_certificate_cache_filename
+
+- name: Print postgres_client_certificate_cache_filename
+  ansible.builtin.debug:
+    var: postgres_client_certificate_cache_filename
 
 - name: Ensure certificate directory exists with the correct permissions
   ansible.builtin.file:
-    path: "{{ self_signed_certifcate.certificate_directory }}"
+    path: "{{ self_signed_certificate.certificate_directory }}"
     state: directory
+    owner: "{{ self_signed_certificate.owner }}"
+    group: "{{ self_signed_certificate.group }}"
     mode: 0700
 
 - name: Generate OpenSSL private key
   community.crypto.openssl_privatekey:
-    path: "{{ self_signed_certifcate.privatekey_filename }}"
-    owner: "{{ self_signed_certifcate.owner }}"
-    group: "{{ self_signed_certifcate.group }}"
+    path: "{{ self_signed_certificate.privatekey_filename }}"
+    owner: "{{ self_signed_certificate.owner }}"
+    group: "{{ self_signed_certificate.group }}"
     mode: 0400
   register: new_privatekey_generated
 
-- name: Convert private key to PKCS8 for use by JDBC
-  when: new_privatekey_generated.changed and self_signed_certifcate.use_pk8
-  block:
-    - name: Convert key
-      ansible.builtin.command: # noqa: no-changed-when
-        "openssl pkcs8 -topk8 -inform PEM -outform DER -nocrypt \
-        -in {{ self_signed_certifcate.privatekey_filename }} -out {{ self_signed_certifcate.pk8_filename }}"
-    - name: Set correct permissions for pk8 file
-      ansible.builtin.file:
-        path: "{{ self_signed_certifcate.pk8_filename }}"
-        owner: "{{ self_signed_certifcate.owner }}"
-        group: "{{ self_signed_certifcate.group }}"
-        mode: 0400
+- name: Convert private key to PKCS8 format for use by JDBC
+  community.crypto.openssl_privatekey_convert:
+    src_path: "{{ self_signed_certificate.privatekey_filename }}"
+    dest_path: "{{ self_signed_certificate.pk8_filename }}"
+    format: pkcs8
+    owner: "{{ self_signed_certificate.owner }}"
+    group: "{{ self_signed_certificate.group }}"
+    mode: 0400
+  when: new_privatekey_generated.changed and self_signed_certificate.use_pk8
 
 - name: Generate OpenSSL CSR
   community.crypto.openssl_csr:
-    path: "{{ self_signed_certifcate.csr_filename }}"
-    privatekey_path: "{{ self_signed_certifcate.privatekey_filename }}"
-    common_name: "{{ self_signed_certifcate.csr_common_name }}"
+    path: "{{ self_signed_certificate.csr_filename }}"
+    privatekey_path: "{{ self_signed_certificate.privatekey_filename }}"
+    common_name: "{{ self_signed_certificate.csr_common_name }}"
 
 - name: Generate a self-signed OpenSSL certificate
   community.crypto.x509_certificate:
-    path: "{{ self_signed_certifcate.certificate_filename }}"
-    privatekey_path: "{{ self_signed_certifcate.privatekey_filename }}"
-    csr_path: "{{ self_signed_certifcate.csr_filename }}"
+    path: "{{ self_signed_certificate.certificate_filename }}"
+    privatekey_path: "{{ self_signed_certificate.privatekey_filename }}"
+    csr_path: "{{ self_signed_certificate.csr_filename }}"
     provider: "{{ self_signed_certificate.provider }}"
     mode: 0400
-    owner: "{{ self_signed_certifcate.owner }}"
-    group: "{{ self_signed_certifcate.group }}"
+    owner: "{{ self_signed_certificate.owner }}"
+    group: "{{ self_signed_certificate.group }}"
 
 - name: Copy certificate to Ansible cache
   ansible.builtin.fetch:
-    src: "{{ self_signed_certifcate.certificate_filename }}"
-    dest: "{{ self_signed_certifcate.cache_filename }}"
+    src: "{{ self_signed_certificate.certificate_filename }}"
+    dest: "{{ self_signed_certificate.cache_filename }}"
     flat: true

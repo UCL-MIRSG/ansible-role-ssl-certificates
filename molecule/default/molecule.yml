@@ -28,6 +28,10 @@ provisioner:
   config_options:
     defaults:
       callbacks_enabled: profile_tasks, timer, yaml
+  inventory:
+    links:
+      group_vars: ../resources/inventory/group_vars/
+      host_vars: ../resources/inventory/host_vars/
   env:
     ANSIBLE_VERBOSITY: "1"
 

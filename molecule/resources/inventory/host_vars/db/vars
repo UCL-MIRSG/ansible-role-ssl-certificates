@@ -1,13 +1,14 @@
 ---
-self_signed_certifcate:
-  owner: "postgres"
-  group: "postgres"
+# Variables for creating a SSL certificate for a postgresql server
+self_signed_certificate:
+  owner: "root"
+  group: "root"
   certificate_directory: "/var/lib/pgsql/certs"
-  privatekey_filename: "{{ self_signed_certifcate.certificate_directory }}/server.key"
+  privatekey_filename: "/var/lib/pgsql/certs/server.key"
   use_pk8: false
-  pk8_filename: ""
-  csr_filename: "{{ self_signed_certifcate.certificate_directory }}/server.csr"
-  csr_common_name: "{{ db_host }}"
-  certificate_filename: "{{ self_signed_certifcate.certificate_directory }}/server.crt"
+  csr_filename: "/var/lib/pgsql/server.csr"
+  csr_common_name: "{{ db_hostname }}"
+  certificate_filename: "/var/lib/pgsql/server.crt"
   provider: "selfsigned"
-  cache_filename: ""
+  cache_filename: "{{ postgres_server_certificate_cache_filename }}" # where to store the server certificate in cache
+  client_certificate_filename: "/var/lib/pgsql/certs/root.crt" # where to copy the client certificate to on the server

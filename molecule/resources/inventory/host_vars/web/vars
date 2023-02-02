@@ -1,6 +1,6 @@
 ---
 # Variables for creating a SSL certificate for a postgresql client
-self_signed_certificate:
+ssl_certificate:
   owner: "root"
   group: "root"
   certificate_directory: "/usr/share/tomcat/.postgresql"

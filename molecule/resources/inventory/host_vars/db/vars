@@ -1,6 +1,6 @@
 ---
 # Variables for creating a SSL certificate for a postgresql server
-self_signed_certificate:
+ssl_certificate:
   owner: "root"
   group: "root"
   certificate_directory: "/var/lib/pgsql/certs"

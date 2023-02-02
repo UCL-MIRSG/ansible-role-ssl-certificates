@@ -10,11 +10,11 @@ If you would like to run Ansible Molecule to test this role, the requirements ar
 
 There are several variables that **must be set** to use this role.
 
-`self_signed_certificate`: dictionary of variables for creating an SSL certificate
+`ssl_certificate`: dictionary of variables for creating an SSL certificate
 
 ### Required variables
 
-The following values **must be included** in the `self_signed_certificate` dictionary:
+The following values **must be included** in the `ssl_certificate` dictionary:
 
 `owner`: name of the user that should own the certificate and associated files
 
@@ -36,7 +36,7 @@ The following values **must be included** in the `self_signed_certificate` dicti
 
 ### Optional variables
 
-The following are **optional** vaules for the `self_signed_certificate` dictionary:
+The following are **optional** vaules for the `ssl_certificate` dictionary:
 
 `cache_filename`: location to copy the self-signed certificate to
 
@@ -54,7 +54,7 @@ First define variables for the server:
 
 ```yaml
 # Variables for creating a SSL certificate for a postgresql server
-self_signed_certificate:
+ssl_certificate:
   owner: "root"
   group: "root"
   certificate_directory: "/var/lib/pgsql/certs"
@@ -73,7 +73,7 @@ We also need to define variables for the client - here we assume the postgresql 
 
 ```yaml
 # Variables for creating a SSL certificate for a postgresql client
-self_signed_certificate:
+ssl_certificate:
   owner: "root"
   group: "root"
   certificate_directory: "/usr/share/tomcat/.postgresql"

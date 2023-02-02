@@ -2,49 +2,49 @@
 # tasks file for ansible-role-ssl-certificates
 - name: Ensure certificate directory exists with the correct permissions
   ansible.builtin.file:
-    path: "{{ self_signed_certificate.certificate_directory }}"
+    path: "{{ ssl_certificate.certificate_directory }}"
     state: directory
-    owner: "{{ self_signed_certificate.owner }}"
-    group: "{{ self_signed_certificate.group }}"
+    owner: "{{ ssl_certificate.owner }}"
+    group: "{{ ssl_certificate.group }}"
     mode: 0700
 
 - name: Generate OpenSSL private key
   community.crypto.openssl_privatekey:
-    path: "{{ self_signed_certificate.privatekey_filename }}"
-    owner: "{{ self_signed_certificate.owner }}"
-    group: "{{ self_signed_certificate.group }}"
+    path: "{{ ssl_certificate.privatekey_filename }}"
+    owner: "{{ ssl_certificate.owner }}"
+    group: "{{ ssl_certificate.group }}"
     mode: 0400
   register: new_privatekey_generated
 
 - name: Convert private key to PKCS8 format for use by JDBC
   community.crypto.openssl_privatekey_convert:
-    src_path: "{{ self_signed_certificate.privatekey_filename }}"
-    dest_path: "{{ self_signed_certificate.pk8_filename }}"
+    src_path: "{{ ssl_certificate.privatekey_filename }}"
+    dest_path: "{{ ssl_certificate.pk8_filename }}"
     format: pkcs8
-    owner: "{{ self_signed_certificate.owner }}"
-    group: "{{ self_signed_certificate.group }}"
+    owner: "{{ ssl_certificate.owner }}"
+    group: "{{ ssl_certificate.group }}"
     mode: 0400
-  when: new_privatekey_generated.changed and self_signed_certificate.use_pk8
+  when: new_privatekey_generated.changed and ssl_certificate.use_pk8
 
 - name: Generate OpenSSL CSR
   community.crypto.openssl_csr:
-    path: "{{ self_signed_certificate.csr_filename }}"
-    privatekey_path: "{{ self_signed_certificate.privatekey_filename }}"
-    common_name: "{{ self_signed_certificate.csr_common_name }}"
+    path: "{{ ssl_certificate.csr_filename }}"
+    privatekey_path: "{{ ssl_certificate.privatekey_filename }}"
+    common_name: "{{ ssl_certificate.csr_common_name }}"
 
 - name: Generate a self-signed OpenSSL certificate
   community.crypto.x509_certificate:
-    path: "{{ self_signed_certificate.certificate_filename }}"
-    privatekey_path: "{{ self_signed_certificate.privatekey_filename }}"
-    csr_path: "{{ self_signed_certificate.csr_filename }}"
-    provider: "{{ self_signed_certificate.provider }}"
+    path: "{{ ssl_certificate.certificate_filename }}"
+    privatekey_path: "{{ ssl_certificate.privatekey_filename }}"
+    csr_path: "{{ ssl_certificate.csr_filename }}"
+    provider: "{{ ssl_certificate.provider }}"
     mode: 0400
-    owner: "{{ self_signed_certificate.owner }}"
-    group: "{{ self_signed_certificate.group }}"
+    owner: "{{ ssl_certificate.owner }}"
+    group: "{{ ssl_certificate.group }}"
 
 - name: Copy certificate to Ansible cache
   ansible.builtin.fetch:
-    src: "{{ self_signed_certificate.certificate_filename }}"
-    dest: "{{ self_signed_certificate.cache_filename }}"
+    src: "{{ ssl_certificate.certificate_filename }}"
+    dest: "{{ ssl_certificate.cache_filename }}"
     flat: true
-  when: self_signed_certificate.cache_filename is defined
+  when: ssl_certificate.cache_filename is defined

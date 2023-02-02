@@ -47,3 +47,4 @@
     src: "{{ self_signed_certificate.certificate_filename }}"
     dest: "{{ self_signed_certificate.cache_filename }}"
     flat: true
+  when: self_signed_certificate.cache_filename is defined

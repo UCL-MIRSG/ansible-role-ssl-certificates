@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ ssl_certificate.owner }}"
     group: "{{ ssl_certificate.group }}"
-    mode: 0700
+    mode: 0755
 
 - name: Generate OpenSSL private key
   community.crypto.openssl_privatekey:

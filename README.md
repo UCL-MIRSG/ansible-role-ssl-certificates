@@ -4,6 +4,20 @@ Generate SSL certificates using the [`community.crypto` collection](https://docs
 
 ## Requirements
 
+### Using the role
+
+If you would like to conver the private key to `pk8` format (`ssl_certificate.use_pk8: true`), you first need to ensure `openssl` is installed before using this role:
+
+```yaml
+- name: Install openssl
+  ansible.builtin.yum:
+    name: openssl
+    state: present
+  when: ssl_certificate.use_pk8
+```
+
+### Testing the role
+
 If you would like to run Ansible Molecule to test this role, the requirements are in [`requirements.txt`](https://github.com/UCL-MIRSG/ansible-role-ssl-certificates/blob/main/requirements.txt).
 
 ## Role Variables

@@ -4,6 +4,11 @@
   become: true
   gather_facts: true
   tasks:
+    - name: Install openssl
+      ansible.builtin.yum:
+        name: openssl
+        state: present
+      when: ssl_certificate.use_pk8
     - name: Create self-signed SSL certificates
       ansible.builtin.include_role:
         name: "mirsg.ssl_certificates"

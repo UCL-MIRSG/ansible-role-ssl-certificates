@@ -6,7 +6,7 @@ Generate SSL certificates using the [`community.crypto` collection](https://docs
 
 ### Using the role
 
-If you would like to conver the private key to `pk8` format (`ssl_certificate.use_pk8: true`), you first need to ensure `openssl` is installed before using this role:
+If you would like to convert the private key to `pk8` format (`ssl_certificate.use_pk8: true`), you first need to ensure `openssl` is installed before using this role:
 
 ```yaml
 - name: Install openssl

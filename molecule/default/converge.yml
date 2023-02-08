@@ -4,6 +4,10 @@
   become: true
   gather_facts: true
   tasks:
+    - name: Install cryptography for certificate creation
+      ansible.builtin.pip:
+        name:
+          - cryptography
     - name: Create self-signed SSL certificates
       ansible.builtin.include_role:
         name: "mirsg.ssl_certificates"
